@@ -8,8 +8,14 @@ var User = require('./app/models/user');
 var Links = require('./app/collections/links');
 var Link = require('./app/models/link');
 var Click = require('./app/models/click');
+var morgan = require('morgan');
+var bcrypt = require('bcrypt-nodejs');
+
+
 
 var app = express();
+app.use(morgan('dev'));
+
 
 app.configure(function() {
   app.set('views', __dirname + '/views');
@@ -20,7 +26,7 @@ app.configure(function() {
 });
 
 app.get('/', function(req, res) {
-  res.render('index');
+  res.render('login');
 });
 
 app.get('/create', function(req, res) {
@@ -69,7 +75,20 @@ app.post('/links', function(req, res) {
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
+app.post('/login', function(req, res) {
+  // bcrypt.hash('yo', 10, function(err, hash) {
+  //   console.log('hashed!');
+  // });
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.password, salt);
 
+  var tempUser = new User();
+  tempUser.username = req.body.username;
+  tempUser.password = hash;
+  // console.log(tempUser);
+  console.log(Users);
+  res.redirect('index');
+});
 
 
 /************************************************************/
