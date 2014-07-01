@@ -1,6 +1,7 @@
 var express = require('express');
 var util = require('./lib/utility');
 var partials = require('express-partials');
+var knex = require('knex');
 
 var db = require('./app/config');
 var Users = require('./app/collections/users');
@@ -76,18 +77,16 @@ app.post('/links', function(req, res) {
 // Write your authentication routes here
 /************************************************************/
 app.post('/login', function(req, res) {
-  // bcrypt.hash('yo', 10, function(err, hash) {
-  //   console.log('hashed!');
-  // });
+
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(req.body.password, salt);
 
   var tempUser = new User();
   tempUser.username = req.body.username;
   tempUser.password = hash;
-  // console.log(tempUser);
-  console.log(Users);
-  res.redirect('index');
+  Users.add(tempUser);
+  console.log(column);
+  res.end();
 });
 
 
